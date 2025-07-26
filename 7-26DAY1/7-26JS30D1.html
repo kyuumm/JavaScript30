@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+  <script>
+    function removeTransistion(e) {
+      //当一个元素的css属性发生变化时，会触发transitionend事件，
+      //在事件对象中包含propertyName属性，指示哪个css属性的过渡已经结束
+      if (e.propertyName !== 'transform') return;
+
+      //如果properName不是transform，不执行后续
+      //  e.classList.remove('playing');
+      //这个写法错误，因为removeTransistion的e传入的是keys，是一个NodeList集合，不是单个dom元素
+
+
+      // e.target.classList.remove('playing');
+      //或者
+      this.classList.remove('playing');
+
+      //this指的是当前触发事件的元素本身，指的就是除法这个事件的.key元素
+      //target指的是真正触发的那个元素，也就是哪个dom元素触发了transistioned
+    }
+
+
+    function playingSound(e) {
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      //注意这里用的是反引号，不是单引号，因为要创建模板字符串，方便在字符串中嵌入变量
+      const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+      console.log(audio);
+      if (!audio) return;
+      // 停止之前的音乐
+      audio.currentTime = 0; //将播放时间重置为0,否则音乐重复快速按键时候会直到播放完后才继续播放
+      audio.play();
+      key.classList.add('playing');
+      //==key.addClassName('playing');==//使用原生js添加class
+
+      const keys = document.querySelectorAll('.key');
+      //遍历所有key元素，keys是一个Nodelist，forEach方法可以遍历
+      keys.forEach(key => key.addEventListener('transitionend', removeTransistion));
+
+      // // 普通写法
+      // keys.forEach(function(key) {
+      //   key.addEventListener('transitionend', removeTransistion);
+      // });
+      // // 箭头函数写法
+      // keys.forEach(key => key.addEventListener('transitionend', removeTransistion));
+      //对于每个key，执行addEventListener操作
+    }
+
+    window.addEventListener('keydown', playingSound);
+  </script>
+
+  <!-- //复习： -->
+  <!--
+捕获阶段（capture）和冒泡阶段（bubble）
+捕获：从最外层的元素开始，逐层向内捕获事件，直到事件到达目标元素。Capture
+冒泡：从目标元素开始，逐层向外冒泡事件，直到事件到达最外层的元素。bubble
+addEventListener()方法的第三个参数：useCapture，默认为false，表示冒泡阶段；如果设为true，表示捕获阶段。
+
+-->
+
+</body>
+
+</html>

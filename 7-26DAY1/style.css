@@ -1,0 +1,51 @@
+html {
+  font-size: 10px;
+  background-color: #eaeaea;
+}
+
+body,
+html {
+  font-family: cursive;
+  margin: 0;
+  padding: 0;
+}
+
+kbd {
+  display: block;
+  font-size: 4rem;
+  /* rem（root em） 是一个相对长度单位，它基于根元素（<html>）的字体大小计算 */
+}
+
+.keys {
+  display: flex;
+  flex: 1;
+
+  align-items: center;
+  /* 这个是 flexbox 的属性，用来使子元素垂直居中 */
+  justify-content: center;
+  /* // 使子元素水平居中 */
+}
+
+.key {
+  /* border: .1rem solid #b5b5b5; */
+  border-radius: .4rem;
+  padding: 1rem .5rem;
+  margin: 1rem;
+  background-color: #fff;
+
+  text-align: center;
+  /* offset-x | offset-y | blur-radius | color */
+  text-shadow: 1px 1px .1rem rgb(141, 141, 141);
+  transition: all .07s;
+}
+
+.playing {
+  transform: scale(1.1);
+  border: #b5b5b5;
+  box-shadow: 2px 2px 1rem #b5b5b5;
+}
+
+.sound {
+  font-size: 1.2rem;
+
+}
