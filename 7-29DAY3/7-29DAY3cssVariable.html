@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+  </div>
+  <!-- data-sizing:
+一个自定义的属性，语法是 <input data-属性名="值">
+
+
+-->
+  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+
+  <style>
+    /*
+      misc styles, nothing to do with CSS variables
+    */
+
+    body {
+      text-align: center;
+      background: #ffffff;
+      color: rgb(64, 62, 62);
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+    }
+
+    .controls {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width: 100px;
+    }
+
+    :root {
+      --base: #afafaf;
+      --spacing: 10px;
+      --blur: 10px;
+
+    }
+
+    .h1 {
+      color: var(base);
+    }
+
+    img {
+      padding: var(--spacing);
+      background-color: var(--base);
+
+      filter: blur(var(--blur));
+      /* filter 属性将模糊或颜色偏移等图形效果应用于元素。滤镜通常用于调整图像、背景和边框的渲染。 */
+    }
+
+    /* 
+    :root 选择器是一种特殊的选择器，它选择文档的根元素。
+    --base 变量名，--spacing 变量名，--blur 变量名，都是自定义的变量名。
+    格式：--变量名：值
+    
+    使用方法：
+    padding: var(--spacing);
+
+    把css变量想象成工具笔，用的时候直接拿
+
+    */
+  </style>
+
+  <script>
+    const inputs = document.querySelectorAll('.controls input');
+
+    //意思是，遍历inputs数组内的元素，给每个input（这个是临时变量随便起名字）元素添加事件监听    
+    //inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+    //区别：change是统计鼠标移动结果后的，mouseMove则是实时更新，鼠标动一下就更新
+
+
+
+    function handleUpdate() {
+      const suffix = this.dataset.sizing || '';
+      //去拿当前 input 元素的 data-sizing 属性的值，如果没有这个属性，就用空字符串
+      //dataset：访问html上所有data-开头的属性，返回一个对象，
+      // 对象里的属性名就是data-开头的属性名，属性值就是data-开头的属性值。
+      //  类似 {    sizing: "px"    }
+
+      //选的是什么？data-sizing="px",suffix选的就是px字符串
+      //为什么‘’？因为颜色选择器没有100px这种单位，所以不需要拼接单位
+
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+
+      //this.value选择的是input内滑块的值，
+      //this.value+suffix是把input内的值加上后缀，比如px，然后赋值给css变量
+      //eg.:  "100"+"px" = "100px" 赋值给css变量
+
+      //setProperty：格式setProperty(propertyName, value)
+      //propertyName是要设置的 CSS 属性名（可以是变量（--base），也可以是普通 CSS 名（'background-color'））
+    }
+  </script>
+
+</body>
+
+</html>
