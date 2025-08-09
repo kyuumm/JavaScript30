@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+  <canvas id="draw" width="800" height="800"></canvas>
+  <script>
+  </script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
+
+  <canvas id="draw" width="800" height="800"></canvas>
+</body>
+<script>
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.strokeStyle = 'black';
+  //描边颜色
+  ctx.lineJoin = 'round';
+  //线条连接处的形状
+  ctx.lineCap = 'round';
+  //线条两端的形状
+  //'butt' 平的
+  // 'round' 圆的
+  // 'square' 平的但末端延伸
+  ctx.lineWidth = 5;
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  let hue = 0;
+
+  let direction = true;
+
+  ctx.lineWidth = hue;
+  //鼠标按下，开始绘制
+  function draw(e) {
+    if (!isDrawing) return;
+
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
+    //饱和度，亮度
+
+
+    ctx.beginPath();
+    //开始路径
+    ctx.moveTo(lastX, lastY);
+    //从上次点开始
+    ctx.lineTo(e.offsetX, e.offsetY);
+    //从当前路径的最后一点，开始绘制到一条指定坐标点的执行
+    ctx.stroke();
+    //按照指定的笔触样式绘制路径
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    hue = (hue + 1) % 360;
+
+
+    if (ctx.lineWidth > 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+    if (direction) {
+      ctx.lineWidth++;
+    } else {
+      ctx.lineWidth--;
+    }
+
+  }
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+</script>
+
+</html>
