@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <canvas id="draw" width="800" height="800"></canvas>
+
   <script>
   </script>
 
@@ -25,10 +25,36 @@
   </style>
 
   <input type="range" name="brushSize" min="1" max="100" value="10" data-sizing="px">
+
+  <input type="color" name="brushColor" value="#000000">
+
+  <select id="blendMode">
+    <option value="source-over">正常</option>
+    <option value="multiply">正片叠底</option>
+    <option value="screen">滤色</option>
+    <option value="overlay">叠加</option>
+    <option value="lighter">变亮</option>
+    <option value="soft-light">柔光</option>
+  </select>
   <canvas id="draw" width="800" height="800"></canvas>
 </body>
 <script>
+  const inputs = document.querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('input', handleUpdate);
+    input.addEventListener('change', handleUpdate);
+  });
 
+  function handleUpdate() {
+    const suffix = this.dataset.sizing || '';
+
+    document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+
+  }
+
+  document.getElementById('blendMode').addEventListener('change', function () {
+    ctx.globalCompositeOperation = this.value;
+  })
 
 </script>
 
@@ -38,7 +64,7 @@
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  ctx.strokeStyle = '--burshColor';
+
   //描边颜色
   ctx.lineJoin = 'round';
   //线条连接处的形状
@@ -47,10 +73,10 @@
   //'butt' 平的
   // 'round' 圆的
   // 'square' 平的但末端延伸
-  ctx.lineWidth = '--brushSize';
 
 
-  ctx.globalCompositeOperation = 'soft-light';
+
+
   //ps颜色叠加模式
   // 'lighter' 叠加
   //overlay 叠加
@@ -59,18 +85,20 @@
   let lastX = 0;
   let lastY = 0;
 
-  let hue = 0;
 
-  let direction = true;
 
-  ctx.lineWidth = hue;
   //鼠标按下，开始绘制
   function draw(e) {
     if (!isDrawing) return;
 
-    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--brushColor');
+    ctx.lineWidth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--brushSize'));
+    //     不管是颜色还是大小，你在 JS 里取 CSS 变量的流程都是一样的：
 
-    //饱和度，亮度
+    // getComputedStyle(document.documentElement)
+    //   .getPropertyValue('--变量名')
+
+    //parseFloat() 将数字部分提取出来，10px 变成 10
 
 
     ctx.beginPath();
@@ -82,17 +110,7 @@
     ctx.stroke();
     //按照指定的笔触样式绘制路径
     [lastX, lastY] = [e.offsetX, e.offsetY];
-    hue = (hue + 1) % 360;
 
-
-    if (ctx.lineWidth > 100 || ctx.lineWidth <= 1) {
-      direction = !direction;
-    }
-    if (direction) {
-      ctx.lineWidth++;
-    } else {
-      ctx.lineWidth--;
-    }
 
   }
 
