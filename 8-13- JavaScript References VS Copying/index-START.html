@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+  <script>
+    // start with strings, numbers and booleans
+
+    // Let's say we have an array
+    const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    const team = players;
+    console.log(players, team);
+
+    team[3] = 'sephiroth';
+    //这里两个数组都变成sephiroth了
+    //对于数组来说是引用，但是对于字符串来说就是复制了
+    // and we want to make a copy of it.
+
+    // You might think we can just do something like this:
+
+    // however what happens when we update that array?
+
+    // now here is the problem!
+
+    // oh no - we have edited the original array too!
+
+    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+
+    // So, how do we fix this? We take a copy instead!
+    const team2 = players.slice();
+    //slice（start，end）----复制新数组的一部分
+
+
+    // one way
+
+    // or create a new array and concat the old one in
+    //array.concat(value1, value2, ...);
+    // 把一个数组和其他数组 拼接在一起，生成一个新数组，不会更改原数组
+
+    const team3 = [].concat(players);
+
+    // or use the new ES6 Spread
+    const team4 = [...players];
+
+    const team5 = Array.from(players);
+    // now when we update it, the original one isn't changed
+
+    // The same thing goes for objects, let's say we have a person object
+
+    // with Objects
+    const person = {
+      name: 'Wes Bos',
+      age: 80
+    };
+
+    // and think we make a copy:
+    // const captain = person;
+    // captain.number = 99;
+    // how do we take a copy instead?
+    const cap2 = Object.assign({}, person, { number: 99 });
+
+    //Object.assign(target(目标对象), ...sources（源对象）)
+
+
+    // We will hopefully soon see the object ...spread
+    const cap3 = { ...person, number: 60 }
+
+    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    const jenowa = {
+      name: sephiroth,
+      contact: {
+        nemisis: cloud - strife
+
+      }
+    }
+
+    const dev = Object.assign({}, jenowa);
+    //只能复制一层，如果改变dev的第二层结构，源对象也会被改变
+
+  </script>
+
+</body>
+
+</html>
