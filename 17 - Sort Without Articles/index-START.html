@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Sort Without Articles</title>
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
   <style>
@@ -41,16 +43,48 @@
       color: #ffc600;
       text-decoration: none;
     }
-
   </style>
 
   <ul id="bands"></ul>
 
-<script>
-const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+  <script>
+    const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
 
+    function strip(bandName) {
+      return bandName.replace(/^(a |an |the )/i, '').trim();
+    }
 
-</script>
+    const sortedBands = bands.sort(function (a, b) {
+
+      if (strip(a) > strip(b)) { return 1; }
+      else { return -1; }
+    });
+
+    document.querySelector('#bands').innerHTML = sortedBands.map(band =>
+      `
+    <li>
+    ${band}
+      </li>
+      `
+    ).join('');
+    //map 方法的特点是返回一个新数组，数组中的每个元素是原数组元素经过处理后的结果
+
+    //为什么使用 ${band} 和 `
+    // 这里用到的是 ES6 的模板字符串（Template String），用反引号 ` 包裹，主要特点：
+    // 可以直接换行，不需要用 + 拼接多行字符串
+    // 可以通过 ${变量名} 直接嵌入变量值，比传统的 'xxx' + 变量 + 'xxx' 更简洁
+
+    //sortedBands.map(band=>`
+    //<li></lis>
+    //`)
+    //等价于
+    //sortedBands.map(function(band){return `<li></li>`})
+
+    //.join('') 是将数组中的所有 HTML 片段连接成一个完整字符串
+    // 因为 innerHTML 需要的是一个单一字符串
+    //否则会出现多余的逗号
+  </script>
 
 </body>
+
 </html>

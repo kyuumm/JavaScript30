@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow with Blur Effects</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+
+<body>
+
+  <div class="hero">
+    <h1 contenteditable>恐惧</h1>
+  </div>
+
+  <style>
+    html {
+      color: black;
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f0f0f0;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+    }
+
+    h1 {
+      text-shadow: 10px 10px 0 rgb(0, 0, 0);
+      font-size: 100px;
+      transition: transform 0.05s ease-out, filter 0.1s ease-out;
+      position: relative;
+    }
+  </style>
+
+  <script>
+    const walk = 100;
+    const elementShakeAmount = 3;
+    const shakeInterval = 50; // 颤抖间隔
+    const ghostInterval = 500; // 重影间隔（比颤抖长）
+    const ghostLifetime = 2000; // 重影存在时间
+    const maxGhosts = 5; // 最大重影数量
+    const blurInterval = 100; // 模糊效果变化间隔
+    const maxBlur = 2; // 最大模糊值（px）
+
+    let lastShakeTime = 0;
+    let lastGhostTime = 0;
+    let lastBlurTime = 0; // 记录上次模糊变化时间
+    let ghostShadows = []; // 存储重影阴影
+
+    const hero = document.querySelector('.hero');
+    const text = hero.querySelector('h1');
+    hero.addEventListener('mousemove', updateEffects);
+
+    // 生成随机数
+    function getRandom(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // 更新所有效果
+    function updateEffects(e) {
+      const { offsetWidth: width, offsetHeight: height } = hero;
+      let { offsetX: x, offsetY: y } = e;
+
+      if (this !== e.target) {
+        x = x + e.target.offsetLeft;
+        y = y + e.target.offsetTop;
+      }
+
+      // 计算基础阴影偏移
+      const xWalk = Math.round(x / width * walk) - (walk / 2);
+      const yWalk = Math.round(y / height * walk) - (walk / 2);
+      const baseShadowX = 0 - xWalk;
+      const baseShadowY = 0 - yWalk;
+
+      // 处理颤抖效果
+      const currentTime = Date.now();
+      const canShake = currentTime - lastShakeTime > shakeInterval;
+
+      const shakeX = canShake ? getRandom(-elementShakeAmount, elementShakeAmount) : 0;
+      const shakeY = canShake ? getRandom(-elementShakeAmount, elementShakeAmount) : 0;
+      const shadowShakeX = canShake ? getRandom(-10, 10) : 0;
+      const shadowShakeY = canShake ? getRandom(-10, 10) : 0;
+
+      if (canShake) {
+        lastShakeTime = currentTime;
+      }
+
+      // 处理重影效果（间隔更长）
+      const canAddGhost = currentTime - lastGhostTime > ghostInterval && ghostShadows.length < maxGhosts;
+
+      if (canAddGhost) {
+        // 添加新的重影（位置随机偏移，不与基础阴影重合）
+        const ghostOffsetX = getRandom(-30, 30);
+        const ghostOffsetY = getRandom(-30, 30);
+        const ghostOpacity = getRandom(0.2, 0.5);
+
+        // 确保重影不与基础阴影完全重合
+        if (Math.abs(ghostOffsetX) > 5 || Math.abs(ghostOffsetY) > 5) {
+          ghostShadows.push({
+            x: baseShadowX + ghostOffsetX,
+            y: baseShadowY + ghostOffsetY,
+            opacity: ghostOpacity,
+            createdAt: currentTime
+          });
+          lastGhostTime = currentTime;
+        }
+      }
+
+      // 移除过期的重影
+      ghostShadows = ghostShadows.filter(ghost =>
+        currentTime - ghost.createdAt < ghostLifetime
+      );
+
+      // 处理字体模糊效果
+      const canBlur = currentTime - lastBlurTime > blurInterval;
+      // 随机生成0到maxBlur之间的模糊值，间隔一段时间才变化
+      const blurValue = canBlur ? getRandom(0, maxBlur) : text.style.filter ?
+        parseFloat(text.style.filter.replace('blur(', '').replace('px)', '')) : 0;
+
+      if (canBlur) {
+        lastBlurTime = currentTime;
+      }
+
+      // 构建所有阴影（基础阴影 + 颤抖 + 重影）
+      const mainShadow = `${baseShadowX + shadowShakeX}px ${baseShadowY + shadowShakeY}px 8px rgba(207,207,207,0.7)`;
+
+      // 重影阴影
+      const ghostShadowStrings = ghostShadows.map(ghost =>
+        `${ghost.x}px ${ghost.y}px 12px rgba(150,150,150,${ghost.opacity})`
+      );
+
+      // 合并所有阴影
+      const allShadows = [mainShadow, ...ghostShadowStrings].join(', ');
+
+      // 应用所有效果
+      text.style.textShadow = allShadows;
+      text.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+      // 应用模糊效果
+      text.style.filter = `blur(${blurValue}px)`;
+    }
+  </script>
+</body>
+
+</html>

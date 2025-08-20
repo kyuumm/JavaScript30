@@ -1,41 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Mouse Shadow</title>
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
   <div class="hero">
-    <h1 contenteditable>🔥WOAH!</h1>
+    <h1 contenteditable>Parkinson's Disease</h1>
   </div>
 
   <style>
-  html {
-    color: black;
-    font-family: sans-serif;
-  }
+    html {
+      color: black;
+      font-family: sans-serif;
+    }
 
-  body {
-    margin: 0;
-  }
+    body {
+      margin: 0;
+    }
 
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-  }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+    }
 
-  h1 {
-    text-shadow: 10px 10px 0 rgba(0,0,0,1);
-    font-size: 100px;
-  }
+    h1 {
+      text-shadow: 10px 10px 0 rgb(0, 0, 0);
+      font-size: 100px;
+    }
   </style>
 
-<script>
-</script>
+  <script>
+    const walk = 100;
+    const hero = document.querySelector('.hero');
+    const text = hero.querySelector('h1');
+    hero.addEventListener('mousemove', shadow)
+
+    // 生成 [min, max) 之间的随机浮点数（包含 min，不包含 max）
+    function getRandomInt(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function shadow(e) {
+      // const width = hero.offsetWidth;
+      // const height = hero.offsethHeight;
+      //es6:
+      const { offsetWidth: width, offsetHeight: height } = hero;
+      let { offsetX: x, offsetY: y } = e;
+      //结构hero->h1，鼠标移动到h1时，x显示的是到h1的距离而不是hero
+      //所以当this和e.target目标不一致时需要手动加上差值
+      if (this !== e.target) {
+        x = x + e.target.offsetLeft;
+        y = y + e.target.offsetTop;
+      }
+
+
+
+      const shakeX = getRandomInt(-10, 10);
+      const shakeY = getRandomInt(-10, 10);
+
+      const elementShakeX = getRandomInt(-3, 3);
+      const elementShakeY = getRandomInt(-3, 3);
+
+      const xWalk = Math.round(x / width * walk) - (walk / 2);
+      const yWalk = Math.round(y / height * walk) - (walk / 2);
+
+      MxWalk = 0 - xWalk + shakeX;
+      MyWalk = 0 - yWalk + shakeY;
+
+      text.style.textShadow = `${MxWalk}px ${MyWalk}px 8px rgba(207,207,207,0.7)`;
+
+      text.style.transform = `translate(${elementShakeX}px, ${elementShakeY}px)`;
+    }
+  </script>
 </body>
+
+
 </html>
