@@ -102,6 +102,7 @@
 
     checkboxes.forEach(checkbox => { checkbox.addEventListener('click', handleClick) });
 
+    let lastChecked;
     function handleClick(e) {
       //每一次修改一个复选框就调用这个函数，修改之后的复选框被记录在lastChecked
       //inBetween是一个临时变量旗帜，初始值默认是false（不勾选）
@@ -109,7 +110,6 @@
       //如果遍历到了两个ab端点，遍历到a端点，inBetween会被置为true
       //然后继续遍历，因为inBetween是true，所以所有遍历到的复选框都会被勾选
       //遍历到b端点，inBetween会被置为false，之后的复选框就不会被勾选
-      let lastChecked = this;
       let inBetween = false;
 
       if (e.shiftKey && this.checked) {

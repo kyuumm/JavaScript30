@@ -61,14 +61,17 @@ h2 {
   display: none;
 }
 
-.plates input + label:before {
+.plates input+label:before {
   content: "⬜️";
   margin-right: 10px;
 }
 
-.plates input:checked + label:before {
+.plates input:checked+label:before {
   content: "🌮";
 }
+
+/* 表示：
+当这个 input 被勾选（checked）时，它后面紧跟着的 label 的 :before 会变成 🌮。 */
 
 .add-items {
   margin-top: 20px;
@@ -78,4 +81,16 @@ h2 {
   padding: 10px;
   outline: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  /* 按钮均匀分布 */
+  margin-top: 1rem;
+}
+
+button {
+  border: 1px solid rgb(202, 202, 202);
+  background-color: rgb(240, 240, 240);
 }
